@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Sitemap: https://mktgosu-glitch.github.io/sitemap.xml
