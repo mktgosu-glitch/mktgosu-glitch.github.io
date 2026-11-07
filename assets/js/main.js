@@ -56,6 +56,22 @@
     revealEls.forEach(function (el) { el.classList.add('is-in'); });
   }
 
+  /* Menu page: category bar scrollspy */
+  var mnTabs = doc.querySelector('[data-mn-tabs]');
+  if (mnTabs && 'IntersectionObserver' in window) {
+    var mnLinks = mnTabs.querySelectorAll('[data-mn-tab]');
+    var mnSet = function (id) {
+      mnLinks.forEach(function (a) {
+        if (a.dataset.mnTab === id) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+    };
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) mnSet(en.target.id); });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    doc.querySelectorAll('[data-mn-section]').forEach(function (s) { spy.observe(s); });
+  }
+
   /* Contact tabs & forms */
   var panel = doc.querySelector('[data-contact]');
   if (!panel) return;
@@ -89,6 +105,12 @@
     });
   });
   if (location.hash === '#contact' && /partnership|franchise/.test(location.search)) showTab('partnership');
+  var svc = /[?&]service=(\d+)/.exec(location.search);
+  if (svc) {
+    showTab('reservation');
+    var svcSel = panel.querySelector('[data-form="reservation"] [data-service]');
+    if (svcSel && svcSel.options[Number(svc[1])]) svcSel.selectedIndex = Number(svc[1]);
+  }
 
   function validate(form) {
     var ok = true;
